@@ -53,7 +53,7 @@ public class LoginVista extends JFrame {
 
             if (usuarioController.validarCredenciales(usuario, contrasena)) {
                 JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso.");
-                new MenuPrincipal().setVisible(true);
+                new MenuPrincipal(usuario).setVisible(true); // Pasamos el nombre del cliente logueado
                 dispose(); // Cierra la ventana de login
             } else {
                 JOptionPane.showMessageDialog(this, "Credenciales incorrectas.");

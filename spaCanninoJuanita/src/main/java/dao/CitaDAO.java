@@ -67,5 +67,31 @@ public class CitaDAO {
         return horasOcupadas;
     }
 
+    public List<Cita> obtenerCitasPorCliente(String nombreCliente) {
+        List<Cita> citas = new ArrayList<>();
+        String sql = "SELECT * FROM Citas WHERE nombreCliente = ?";
+        
+        try (PreparedStatement pst = con.prepareStatement(sql)) {
+            pst.setString(1, nombreCliente);
+            ResultSet rs = pst.executeQuery();
+            
+            while (rs.next()) {
+                Cita cita = new Cita(
+                    rs.getDate("fecha"),
+                    rs.getString("hora"),
+                    rs.getString("servicio"),
+                    rs.getString("nombreMascota"),
+                    rs.getString("nombreCliente")
+                );
+                citas.add(cita);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener citas del cliente: " + e.getMessage());
+        }
+        
+        return citas;
+    }
+
+
     
 }

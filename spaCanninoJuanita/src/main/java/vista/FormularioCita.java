@@ -22,7 +22,7 @@ public class FormularioCita extends JFrame {
         "13:00", "14:00", "15:00", "16:00"
     };
 
-    public FormularioCita() {
+    public FormularioCita(String nombreCliente) {
         setTitle("Agendar Cita - SPA Juanita");
         setSize(400, 400);
         setLocationRelativeTo(null);
@@ -65,8 +65,9 @@ public class FormularioCita extends JFrame {
         clienteLabel.setBounds(30, 190, 120, 25);
         add(clienteLabel);
 
-        JTextField clienteText = new JTextField();
+        JTextField clienteText = new JTextField(nombreCliente);
         clienteText.setBounds(150, 190, 180, 25);
+        clienteText.setEnabled(false);
         add(clienteText);
 
         JButton agendarBtn = new JButton("Agendar Cita");
@@ -108,7 +109,7 @@ public class FormularioCita extends JFrame {
             String hora = (String) horaCombo.getSelectedItem();
             String servicio = servicioText.getText();
             String nombreMascota = mascotaText.getText();
-            String nombreCliente = clienteText.getText();
+            
 
             if (hora == null || servicio.isEmpty() || nombreMascota.isEmpty() || nombreCliente.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
