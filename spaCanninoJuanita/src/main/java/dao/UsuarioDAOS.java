@@ -2,6 +2,7 @@
 	import java.sql.Connection;
 	import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 	import modelo.Usuario;
@@ -20,8 +21,6 @@ import javax.swing.JOptionPane;
 	            pst.setString(1, usuario.getNombrecompleto());
 	            pst.setString(2, usuario.getUsuario());
 	            pst.setString(3, usuario.getContrasena());
-	            pst.setString(4, usuario.getRaza());
-	            pst.setString(5, usuario.getNombreperro());
 	            pst.executeUpdate();
 	            JOptionPane.showMessageDialog(null, "Usuario registrado con éxito");
 			}catch(Exception e) {
@@ -41,9 +40,8 @@ import javax.swing.JOptionPane;
 		            return new Usuario(
 		                rs.getString("nombreCompleto"),
 		                rs.getString("ingresoUsuario"),
-		                rs.getString("ingresoPassword"),
-		                rs.getString("ingresoRaza"),
-		                rs.getString("ingresoNombrePerro")
+		                rs.getString("ingresoPassword")
+		                
 		            );
 		        }
 
@@ -69,6 +67,24 @@ import javax.swing.JOptionPane;
 		        return false;
 		    }
 		}
+		
+		public int obtenerIdPorUsuario(String nombreUsuario) {
+		    int id = -1;
+		    String sql = "SELECT id FROM usuarios WHERE ingresoUsuario = ?";
+
+		    try (PreparedStatement pst = con.prepareStatement(sql)) {
+		        pst.setString(1, nombreUsuario);
+		        ResultSet rs = pst.executeQuery();
+		        if (rs.next()) {
+		            id = rs.getInt("id");
+		        }
+		    } catch (SQLException e) {
+		        System.out.println("Error al obtener ID del usuario: " + e.getMessage());
+		    }
+
+		    return id;
+		}
+
 
 		
 	}

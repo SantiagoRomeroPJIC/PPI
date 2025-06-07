@@ -2,6 +2,7 @@ package vista;
 
 import controlador.UsuarioController;
 import conexion.CConexion;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Connection;
@@ -52,16 +53,23 @@ public class LoginVista extends JFrame {
             String contrasena = new String(passwordText.getPassword());
 
             if (usuarioController.validarCredenciales(usuario, contrasena)) {
-                JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso.");
-                new MenuPrincipal(usuario).setVisible(true); // Pasamos el nombre del cliente logueado
-                dispose(); // Cierra la ventana de login
+                int idCliente = usuarioController.obtenerIdCliente(usuario); // Obtener el ID
+                if (idCliente != -1) {
+                    JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso.");
+                    new MenuPrincipal(conexion, idCliente, usuario).setVisible(true); // Pásalo al menú principal
+                    dispose(); // Cierra la ventana de login
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se pudo obtener el ID del cliente.");
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "Credenciales incorrectas.");
             }
         });
+
 
         registrarBtn.addActionListener(e -> {
             new RegistroFormulario().setVisible(true);
         });
     }
 }
+

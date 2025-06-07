@@ -12,7 +12,7 @@ import java.util.List;
 
 public class VerCitasVista extends JFrame {
 
-    public VerCitasVista(String nombreCliente) {
+    public VerCitasVista(Connection conexion, int idCliente ) {
         setTitle("Mis Citas Agendadas");
         setSize(600, 400);
         setLocationRelativeTo(null);
@@ -21,11 +21,11 @@ public class VerCitasVista extends JFrame {
 
         // Conexión y DAO
         CConexion con = new CConexion();
-        Connection conexion = con.establecerConexion();
+        Connection conectar = con.establecerConexion();
         CitaDAO citaDAO = new CitaDAO(conexion);
 
         // Obtener las citas del cliente
-        List<Cita> citas = citaDAO.obtenerCitasPorCliente(nombreCliente);
+        List<Cita> citas = citaDAO.obtenerCitasPorCliente(idCliente);
 
         // Modelo de tabla
         DefaultTableModel model = new DefaultTableModel();
@@ -41,7 +41,7 @@ public class VerCitasVista extends JFrame {
                     c.getFecha().toString(),
                     c.getHora(),
                     c.getServicio(),
-                    c.getNombreMascota()
+                    c.getIdPerro()
                 });
             }
         } else {

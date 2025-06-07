@@ -3,16 +3,16 @@ package vista;
 import javax.swing.*;
 import com.toedter.calendar.JDateChooser;
 
-import conexion.CConexion;
 import dao.CitaDAO;
+import dao.PerroDAO;
 import modelo.Cita;
+import modelo.Perro;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
 import java.sql.Date;
-import java.util.*;
 import java.util.List;
 
 public class FormularioCita extends JFrame {
@@ -22,7 +22,13 @@ public class FormularioCita extends JFrame {
         "13:00", "14:00", "15:00", "16:00"
     };
 
-    public FormularioCita(String nombreCliente) {
+    private Connection conexion;
+    private int idCliente;
+
+    public FormularioCita(Connection conexion, int idCliente) {
+        this.conexion = conexion;
+        this.idCliente = idCliente;
+
         setTitle("Agendar Cita - SPA Juanita");
         setSize(400, 400);
         setLocationRelativeTo(null);
@@ -53,30 +59,34 @@ public class FormularioCita extends JFrame {
         servicioText.setBounds(150, 110, 180, 25);
         add(servicioText);
 
-        JLabel mascotaLabel = new JLabel("Nombre Mascota:");
-        mascotaLabel.setBounds(30, 150, 120, 25);
+        JLabel mascotaLabel = new JLabel("Mascota:");
+        mascotaLabel.setBounds(30, 150, 100, 25);
         add(mascotaLabel);
 
-        JTextField mascotaText = new JTextField();
-        mascotaText.setBounds(150, 150, 180, 25);
-        add(mascotaText);
+        JComboBox<Perro> mascotaCombo = new JComboBox<>();
+        mascotaCombo.setBounds(150, 150, 180, 25);
+        add(mascotaCombo);
 
-        JLabel clienteLabel = new JLabel("Nombre Cliente:");
-        clienteLabel.setBounds(30, 190, 120, 25);
+        JLabel clienteLabel = new JLabel("Cliente (ID):");
+        clienteLabel.setBounds(30, 190, 100, 25);
         add(clienteLabel);
 
-        JTextField clienteText = new JTextField(nombreCliente);
-        clienteText.setBounds(150, 190, 180, 25);
-        clienteText.setEnabled(false);
-        add(clienteText);
+        JLabel clienteIdLabel = new JLabel(String.valueOf(idCliente));
+        clienteIdLabel.setBounds(150, 190, 180, 25);
+        add(clienteIdLabel);
 
         JButton agendarBtn = new JButton("Agendar Cita");
         agendarBtn.setBounds(120, 250, 150, 30);
         add(agendarBtn);
 
-        CConexion con = new CConexion();
-        Connection conexion = con.establecerConexion();
         CitaDAO citaDAO = new CitaDAO(conexion);
+        PerroDAO perroDAO = new PerroDAO(conexion);
+
+        // Cargar perros del cliente en el combo
+        List<Perro> perros = perroDAO.obtenerPerrosPorCliente(idCliente);
+        for (Perro perro : perros) {
+            mascotaCombo.addItem(perro); // Perro debe tener método toString() que devuelva el nombre
+        }
 
         // Escuchar cambios de fecha
         dateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
@@ -87,7 +97,6 @@ public class FormularioCita extends JFrame {
                     Date fechaSql = new Date(fechaSeleccionada.getTime());
                     List<String> horasOcupadas = citaDAO.obtenerHorasOcupadas(fechaSql);
 
-                    // Limpiar comboBox y agregar solo horas disponibles
                     horaCombo.removeAllItems();
                     for (String hora : HORAS_TOTALES) {
                         if (!horasOcupadas.contains(hora)) {
@@ -108,10 +117,9 @@ public class FormularioCita extends JFrame {
             Date fechaSql = new Date(fechaUtil.getTime());
             String hora = (String) horaCombo.getSelectedItem();
             String servicio = servicioText.getText();
-            String nombreMascota = mascotaText.getText();
-            
+            Perro perroSeleccionado = (Perro) mascotaCombo.getSelectedItem();
 
-            if (hora == null || servicio.isEmpty() || nombreMascota.isEmpty() || nombreCliente.isEmpty()) {
+            if (hora == null || servicio.isEmpty() || perroSeleccionado == null) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
                 return;
             }
@@ -119,12 +127,12 @@ public class FormularioCita extends JFrame {
             if (citaDAO.citaExiste(fechaSql, hora)) {
                 JOptionPane.showMessageDialog(this, "Ya existe una cita para esa fecha y hora.");
             } else {
-                Cita cita = new Cita(fechaSql, hora, servicio, nombreMascota, nombreCliente);
+                Cita cita = new Cita(fechaSql, hora, servicio, perroSeleccionado.getId_perro(), idCliente);
                 boolean exito = citaDAO.registrarCita(cita);
 
                 if (exito) {
                     JOptionPane.showMessageDialog(this, "Cita registrada con éxito.");
-                    dispose(); // cierra el formulario después del registro
+                    dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "Hubo un error al registrar la cita.");
                 }
@@ -132,5 +140,5 @@ public class FormularioCita extends JFrame {
         });
     }
 }
-
+	
 
