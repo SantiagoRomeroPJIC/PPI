@@ -18,8 +18,8 @@ public class UsuarioController {
         this.usuarioDAO = new UsuarioDAOS(conexion);
     }
 
-    public void registrar(String nombreCompleto, String usuario, String contrasena, ) {
-        Usuario nuevo = new Usuario(nombreCompleto, usuario, contrasena, );
+    public void registrar(String nombreCompleto, String usuario, String contrasena ) {
+        Usuario nuevo = new Usuario(nombreCompleto, usuario, contrasena );
         usuarioDAO.registrarUsuario(nuevo);
     }
 

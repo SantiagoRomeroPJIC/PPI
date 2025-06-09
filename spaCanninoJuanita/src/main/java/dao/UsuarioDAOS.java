@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 	
 		public void registrarUsuario(Usuario usuario) {
 			try {
-				String sql = "INSERT INTO Usuarios (nombreCompleto, ingresoUsuario, ingresoPassword, ingresoRaza, ingresoNombrePerro) VALUES (?, ?, ?, ?, ?)";
+				String sql = "INSERT INTO Usuarios (nombreCompleto, ingresoUsuario, ingresoPassword) VALUES (?, ?, ?)";
 	            PreparedStatement pst = con.prepareStatement(sql);
 	            pst.setString(1, usuario.getNombrecompleto());
 	            pst.setString(2, usuario.getUsuario());

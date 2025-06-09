@@ -18,12 +18,11 @@ public class Cita {
         this.idCliente = idCliente;
     }
 
-    public Cita(int id, Date fecha, String hora, String servicio, int idPerro, int idCliente) {
+    public Cita(int id, Date fecha, String hora, String servicio, int idCliente) {
         this.id = id;
         this.fecha = fecha;
         this.hora = hora;
         this.servicio = servicio;
-        this.idPerro = idPerro;
         this.idCliente = idCliente;
     }
 

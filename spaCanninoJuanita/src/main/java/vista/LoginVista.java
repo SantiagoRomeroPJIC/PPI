@@ -56,7 +56,7 @@ public class LoginVista extends JFrame {
                 int idCliente = usuarioController.obtenerIdCliente(usuario); // Obtener el ID
                 if (idCliente != -1) {
                     JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso.");
-                    new MenuPrincipal(conexion, idCliente, usuario).setVisible(true); // Pásalo al menú principal
+                    new MenuPrincipal(conexion, idCliente).setVisible(true); // Pásalo al menú principal
                     dispose(); // Cierra la ventana de login
                 } else {
                     JOptionPane.showMessageDialog(this, "No se pudo obtener el ID del cliente.");

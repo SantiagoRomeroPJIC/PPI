@@ -15,7 +15,7 @@ public class CitaDAO {
     }
 
     public boolean registrarCita(Cita cita) {
-        String sql = "INSERT INTO citas (fecha, hora, servicio, id_perro, id_cliente) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO citas (fecha, hora, servicio, id_perro, idCliente) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pst = conexion.prepareStatement(sql)) {
             pst.setDate(1, cita.getFecha());
             pst.setString(2, cita.getHora());
@@ -63,7 +63,7 @@ public class CitaDAO {
 
     public List<Cita> obtenerCitasPorCliente(int idCliente) {
         List<Cita> citas = new ArrayList<>();
-        String sql = "SELECT * FROM citas WHERE id_cliente = ?";
+        String sql = "SELECT * FROM citas WHERE idCliente = ?";
         try (PreparedStatement pst = conexion.prepareStatement(sql)) {
             pst.setInt(1, idCliente);
             ResultSet rs = pst.executeQuery();
@@ -73,8 +73,7 @@ public class CitaDAO {
                     rs.getDate("fecha"),
                     rs.getString("hora"),
                     rs.getString("servicio"),
-                    rs.getInt("id_perro"),
-                    rs.getInt("id_cliente")
+                    rs.getInt("idCliente")
                 );
                 citas.add(cita);
             }

@@ -10,6 +10,6 @@ public class RegistroVista {
         Connection con = conexion.establecerConexion();
 
         UsuarioController controller = new UsuarioController(con);
-        controller.registrar("David", "Arosty", "1234", "Chanda", "Molly");
+        controller.registrar("David", "Arosty", "1234");
 	}
 }

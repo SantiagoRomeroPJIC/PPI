@@ -28,7 +28,8 @@ public class FormularioCita extends JFrame {
     public FormularioCita(Connection conexion, int idCliente) {
         this.conexion = conexion;
         this.idCliente = idCliente;
-
+        System.out.println("ID Cliente recibido en FormularioCita: " + idCliente);
+        
         setTitle("Agendar Cita - SPA Juanita");
         setSize(400, 400);
         setLocationRelativeTo(null);
@@ -55,9 +56,11 @@ public class FormularioCita extends JFrame {
         servicioLabel.setBounds(30, 110, 100, 25);
         add(servicioLabel);
 
-        JTextField servicioText = new JTextField();
-        servicioText.setBounds(150, 110, 180, 25);
-        add(servicioText);
+        String[] serviciosDisponibles = {"Baño", "Corte de pelo", "Corte de uñas"};
+        JComboBox<String> servicioCombo = new JComboBox<>(serviciosDisponibles);
+        servicioCombo.setBounds(150, 110, 180, 25);
+        add(servicioCombo);
+
 
         JLabel mascotaLabel = new JLabel("Mascota:");
         mascotaLabel.setBounds(30, 150, 100, 25);
@@ -116,7 +119,7 @@ public class FormularioCita extends JFrame {
 
             Date fechaSql = new Date(fechaUtil.getTime());
             String hora = (String) horaCombo.getSelectedItem();
-            String servicio = servicioText.getText();
+            String servicio = (String) servicioCombo.getSelectedItem();
             Perro perroSeleccionado = (Perro) mascotaCombo.getSelectedItem();
 
             if (hora == null || servicio.isEmpty() || perroSeleccionado == null) {
@@ -131,13 +134,49 @@ public class FormularioCita extends JFrame {
                 boolean exito = citaDAO.registrarCita(cita);
 
                 if (exito) {
-                    JOptionPane.showMessageDialog(this, "Cita registrada con éxito.");
+                    String tamaño = perroSeleccionado.getTamaño().toLowerCase();
+                    String servicioElegido = servicio.toLowerCase();
+
+                    double precio = 0.0;
+
+                    if (servicioElegido.contains("baño") && servicioElegido.contains("corte")) {
+                        switch (tamaño) {
+                            case "pequeño": precio = 40.0; break;
+                            case "mediano": precio = 50.0; break;
+                            case "grande":  precio = 60.0; break;
+                        }
+                    } else if (servicioElegido.contains("baño")) {
+                        switch (tamaño) {
+                            case "pequeño": precio = 20.0; break;
+                            case "mediano": precio = 30.0; break;
+                            case "grande":  precio = 40.0; break;
+                        }
+                    } else if (servicioElegido.contains("corte")) {
+                        switch (tamaño) {
+                            case "pequeño": precio = 25.0; break;
+                            case "mediano": precio = 35.0; break;
+                            case "grande":  precio = 45.0; break;
+                        }
+                    } else {
+                        precio = 30.0;
+                    }
+
+                    JOptionPane.showMessageDialog(this,
+                        "¡Cita registrada con éxito!\n" +
+                        "Servicio: " + servicio + "\n" +
+                        "Mascota: " + perroSeleccionado.getNombrePerro() + "\n" +
+                        "Tamaño: " + perroSeleccionado.getTamaño() + "\n" +
+                        "Valor a pagar: $" + precio
+                    );
+
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "Hubo un error al registrar la cita.");
                 }
             }
-        });
+        }); // <- CIERRE del addActionListener
+         // <- CIERRE del constructor
+
     }
 }
 	

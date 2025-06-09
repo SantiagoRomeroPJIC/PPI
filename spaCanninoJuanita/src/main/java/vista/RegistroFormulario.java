@@ -32,9 +32,7 @@ public class RegistroFormulario extends JFrame {
         usuarioText = crearCampo(panel, gbc, "Usuario:", 1);
         passwordText = new JPasswordField();
         addCampo(panel, gbc, "Contraseña:", passwordText, 2);
-        razaText = crearCampo(panel, gbc, "Raza del perro:", 3);
-        nombrePerroText = crearCampo(panel, gbc, "Nombre del perro:", 4);
-
+      
         // Botón
         JButton registrarBtn = new JButton("Registrar");
         registrarBtn.setBackground(new Color(144, 202, 249));
@@ -77,14 +75,13 @@ public class RegistroFormulario extends JFrame {
         String nombre = nombreText.getText();
         String usuario = usuarioText.getText();
         String pass = new String(passwordText.getPassword());
-        String raza = razaText.getText();
-        String nombrePerro = nombrePerroText.getText();
+    
 
         CConexion con = new CConexion();
         Connection conexion = con.establecerConexion();
 
         UsuarioController controlador = new UsuarioController(conexion);
-        controlador.registrar(nombre, usuario, pass, raza, nombrePerro);
+        controlador.registrar(nombre, usuario, pass);
     }
 }
 

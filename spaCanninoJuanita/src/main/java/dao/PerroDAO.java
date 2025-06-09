@@ -15,12 +15,13 @@ public class PerroDAO {
 
     // Registrar un perro
     public boolean registrarPerro(Perro perro) {
-        String sql = "INSERT INTO Perros (nombrePerro, tamaño, raza, id_cliente) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Perros (nombre_perro, tamanio, raza, idCliente) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pst = con.prepareStatement(sql)) {
             pst.setString(1, perro.getNombrePerro());
             pst.setString(2, perro.getTamaño());
-            pst.setInt(3, perro.getIdCliente());
-            pst.setString(4, perro.getRaza());
+            pst.setString(3, perro.getRaza());
+            pst.setInt(4, perro.getIdCliente());
+            
             pst.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -31,17 +32,17 @@ public class PerroDAO {
 
     public List<Perro> obtenerPerrosPorCliente(int idCliente) {
         List<Perro> perros = new ArrayList<>();
-        String sql = "SELECT * FROM perros WHERE id_cliente = ?";
+        String sql = "SELECT * FROM perros WHERE idCliente = ?";
         try (PreparedStatement pst = con.prepareStatement(sql)) {
             pst.setInt(1, idCliente);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 Perro perro = new Perro(
-                    rs.getInt("id_perro"),
-                    rs.getString("nombre"),
-                    rs.getString("tamano"),
+                    rs.getInt("id"),
+                    rs.getString("nombre_perro"),
+                    rs.getString("tamanio"),
                     rs.getString("raza"),
-                    rs.getInt("id_cliente")
+                    rs.getInt("idCliente")
                 );
                 perros.add(perro);
             }
@@ -61,10 +62,10 @@ public class PerroDAO {
             if (rs.next()) {
                 return new Perro(
                     rs.getInt("id_perro"),
-                    rs.getString("nombrePerro"),
-                    rs.getString("tamaño"),
+                    rs.getString("nombre_perro"),
+                    rs.getString("tamanio"),
                     rs.getString("raza"),
-                    rs.getInt("id_cliente")
+                    rs.getInt("idCliente")
                 );
             }
         } catch (SQLException e) {
